@@ -39,7 +39,7 @@ public class UserService {
   Boolean loginUser(@RequestBody User user) {
     List<User> users = repository.findAllUsers();
     for (User u : users) {
-        if (u.getUsername() == user.getUsername() && u.getPassword() == user.getPassword()) {
+        if (u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
             return true;
         }
     }

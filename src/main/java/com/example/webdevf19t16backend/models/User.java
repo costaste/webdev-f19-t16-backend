@@ -1,5 +1,6 @@
 package com.example.webdevf19t16backend.models;
 
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 
@@ -10,6 +11,8 @@ public class User {
   private String username;
   private String password;
   private String role;
+  @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<Review> reviews;
 
   public User() {
     this.username = UUID.randomUUID().toString();;

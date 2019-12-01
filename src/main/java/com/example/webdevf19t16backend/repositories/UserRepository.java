@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, String> {
   @Query("SELECT user from User user WHERE user.username=:username")
   public User findUser(@Param("username") String username);
 
