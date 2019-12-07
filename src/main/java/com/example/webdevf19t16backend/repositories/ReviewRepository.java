@@ -17,4 +17,7 @@ public interface ReviewRepository extends CrudRepository<Review, String> {
 
   @Query("SELECT review from Review review WHERE review.user.username=:username")
   public List<Review> findReviewsForUser(@Param("username") String username);
+
+  @Query("SELECT review from Review review WHERE review.songId=:songId")
+  public List<Review> findReviewsForSong(@Param("songId") Integer songId);
 }

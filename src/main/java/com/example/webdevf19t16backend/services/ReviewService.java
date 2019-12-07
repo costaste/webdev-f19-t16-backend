@@ -34,4 +34,9 @@ public class ReviewService {
   List<Review> findReviewsForUser(@PathVariable("username") String username) {
     return repository.findReviewsForUser(username);
   }
+
+  @GetMapping("/api/songs/{songId}/reviews")
+  List<Review> findReviewsForSong(@PathVariable("songId") Integer songId) {
+    return repository.findReviewsForSong(songId);
+  }
 }

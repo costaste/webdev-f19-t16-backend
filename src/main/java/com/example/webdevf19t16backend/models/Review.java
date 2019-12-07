@@ -5,24 +5,35 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name="reviews")
+@Table(name = "reviews")
 public class Review {
   @Id
   private String id;
   @ManyToOne
   @JsonIgnore
   private User user;
+  @Lob
+  @Column(name="text", length=1000)
   private String text;
+  private Integer songId;
 
   public Review() {
     this.id = UUID.randomUUID().toString();
     this.text = "";
   }
 
-  public Review(User user) {
+  public Integer getSongId() {
+    return songId;
+  }
+
+  public void setSongId(Integer songId) {
+    this.songId = songId;
+  }
+
+  public Review(String text, Integer songId) {
     this.id = UUID.randomUUID().toString();
-    this.text = "";
-    this.user = user;
+    this.text = text;
+    this.songId = songId;
   }
 
   public String getId() {
