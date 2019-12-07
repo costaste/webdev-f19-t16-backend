@@ -13,6 +13,8 @@ public class User {
   private String role;
   @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Review> reviews;
+  @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<Review> tags;
 
   public User() {
     this.username = UUID.randomUUID().toString();;
