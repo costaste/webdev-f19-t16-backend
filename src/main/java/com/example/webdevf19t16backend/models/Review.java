@@ -2,6 +2,8 @@ package com.example.webdevf19t16backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +18,8 @@ public class Review {
   @Column(name="text", length=1000)
   private String text;
   private Integer songId;
+  @ManyToMany(mappedBy = "likedReviews", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+  Set<User> likes;
 
   public Review() {
     this.id = UUID.randomUUID().toString();
@@ -58,5 +62,13 @@ public class Review {
 
   public void setText(String text) {
     this.text = text;
+  }
+
+  public void addLike(User user) {
+    this.likes.add(user);
+  }
+
+  public Set<User> getLikes() {
+    return likes;
   }
 }

@@ -1,6 +1,8 @@
 package com.example.webdevf19t16backend.services;
 
+import com.example.webdevf19t16backend.models.Review;
 import com.example.webdevf19t16backend.models.User;
+import com.example.webdevf19t16backend.repositories.ReviewRepository;
 import com.example.webdevf19t16backend.repositories.UserRepository;
 
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +16,14 @@ public class UserService {
 
   @Autowired
   UserRepository repository;
+  @Autowired
+  ReviewRepository revRepo;
 
   // Creates a new User instance and add it to the existing collection of Users.
   @PostMapping("/api/users")
-  List<User> createUser(@RequestBody User newUser) {
+  User createUser(@RequestBody User newUser) {
     repository.save(newUser);
-    return repository.findAllUsers();
+    return repository.findUser(newUser.getUsername());
   }
 
   // Method to let frontend know if a user with that username already exists
@@ -44,5 +48,21 @@ public class UserService {
         }
     }
     return false;
+  }
+
+  @PutMapping("/api/users/{username}/reviews/{reviewId}")
+  List<Review> likeReview(
+    @PathVariable("username") String username,
+    @PathVariable("reviewId") String reviewId
+  ) {
+    User user = repository.findUser(username);
+    Review review = revRepo.findReview(reviewId);
+    System.out.println("USERNAME::" + username);
+    System.out.println("REVIEWID::" + reviewId);
+    user.addLike(review);
+    review.addLike(user);
+    repository.save(user);
+    revRepo.save(review);
+    return revRepo.findAllReviews();
   }
 }

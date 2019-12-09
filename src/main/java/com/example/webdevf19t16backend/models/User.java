@@ -1,6 +1,7 @@
 package com.example.webdevf19t16backend.models;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 
@@ -15,6 +16,13 @@ public class User {
   private List<Review> reviews;
   @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Review> tags;
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @JoinTable(
+    name = "review_likes",
+    joinColumns = {@JoinColumn(name = "user_username")},
+    inverseJoinColumns = {@JoinColumn(name = "review_id")}
+  )
+  Set<Review> likedReviews;
 
   public User() {
     this.username = UUID.randomUUID().toString();;
@@ -54,5 +62,10 @@ public class User {
 
   public void setRole(String role) {
     this.role = role;
+  }
+
+  public void addLike(Review r) {
+    this.likedReviews.add(r);
+    r.getLikes().add(this);
   }
 }
