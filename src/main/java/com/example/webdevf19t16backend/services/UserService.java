@@ -26,9 +26,12 @@ public class UserService {
     return repository.findUser(newUser.getUsername());
   }
 
-  // Method to let frontend know if a user with that username already exists
+  // Method to let frontend know if a user with that username already exists (false = invalid, true = valid)
   @PostMapping("/api/users/validate")
   Boolean validateUser(@RequestBody User newUser) {
+    if (newUser.getUsername().equals("") || newUser.getPassword().equals("")) {
+      return false;
+    }
     List<User> users = repository.findAllUsers();
     for (User user : users) {
         if (user.getUsername().equals(newUser.getUsername())) {
@@ -40,14 +43,14 @@ public class UserService {
 
   // Checks that user credentials exist
   @PostMapping("/api/users/login")
-  Boolean loginUser(@RequestBody User user) {
+  User loginUser(@RequestBody User user) {
     List<User> users = repository.findAllUsers();
     for (User u : users) {
         if (u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
-            return true;
+            return u;
         }
     }
-    return false;
+    return new User("", "", "");
   }
 
   @PutMapping("/api/users/{username}/reviews/{reviewId}")
