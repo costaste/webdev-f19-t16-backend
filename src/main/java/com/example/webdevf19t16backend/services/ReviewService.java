@@ -39,4 +39,11 @@ public class ReviewService {
   List<Review> findReviewsForSong(@PathVariable("songId") Integer songId) {
     return repository.findReviewsForSong(songId);
   }
+
+  @DeleteMapping("/api/reviews/{reviewId}")
+  List<Review> deleteReview(@PathVariable("reviewId") String reviewId) {
+    Review r = repository.findReview(reviewId);
+    repository.delete(r);
+    return repository.findAllReviews();
+  }
 }

@@ -60,12 +60,20 @@ public class UserService {
   ) {
     User user = repository.findUser(username);
     Review review = revRepo.findReview(reviewId);
-    System.out.println("USERNAME::" + username);
-    System.out.println("REVIEWID::" + reviewId);
+
     user.addLike(review);
     review.addLike(user);
     repository.save(user);
     revRepo.save(review);
+
+    return revRepo.findAllReviews();
+  }
+
+  @PutMapping("/api/users/{username}/reviews")
+  List<Review> editReview(@PathVariable("username") String username, @RequestBody Review editedReview){
+    Review r = revRepo.findReview(editedReview.getId());
+    r.setText(editedReview.getText());
+    revRepo.save(r);
     return revRepo.findAllReviews();
   }
 }

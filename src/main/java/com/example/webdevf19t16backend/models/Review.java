@@ -18,7 +18,7 @@ public class Review {
   @Column(name="text", length=1000)
   private String text;
   private Integer songId;
-  @ManyToMany(mappedBy = "likedReviews", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+  @ManyToMany(mappedBy = "likedReviews",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   Set<User> likes;
 
   public Review() {
