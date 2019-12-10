@@ -22,8 +22,8 @@ public class UserService {
 
   @GetMapping(userUrl + "/{username}")
   User getUser(@PathVariable("username") String username) {
-    User user =  userRepo.findUserFromUsername(username);
-    return new User(user.getUsername(), "", user.getRole(), user.getPhotoUrl());
+    User user = userRepo.findUserFromUsername(username);
+    return user;
   }
 
   // Creates a new User instance and add it to the existing collection of Users.
