@@ -21,16 +21,9 @@ public class UserService {
   ReviewRepository reviewRepo;
 
   @GetMapping(userUrl + "/{username}")
-  User getUser(
-          @PathVariable("username") String username,
-          @RequestBody String password) {
-    User user = userRepo.findUserFromUsername(username);
-
-    if(password.equals(user.getPassword())) {
-      return user;
-    } else {
-      return new User(user.getUsername(), "", user.getRole(), user.getPhotoUrl());
-    }
+  User getUser(@PathVariable("username") String username) {
+    User user =  userRepo.findUserFromUsername(username);
+    return new User(user.getUsername(), "", user.getRole(), user.getPhotoUrl());
   }
 
   // Creates a new User instance and add it to the existing collection of Users.
