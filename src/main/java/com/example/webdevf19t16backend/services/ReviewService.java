@@ -27,6 +27,11 @@ public class ReviewService {
     reviewRepo.save(newReview);
     return reviewRepo.findAllReviews();
   }
+  
+  @GetMapping("api/reviews")
+  List<Review> findAllReview(){
+    return repository.findAllReviews();
+  }
 
   @GetMapping("/api/users/{username}/reviews")
   List<Review> findReviewsForUser(@PathVariable("username") String username) {
