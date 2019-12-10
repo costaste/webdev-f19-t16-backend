@@ -11,15 +11,18 @@ import java.util.UUID;
 public class Review {
   @Id
   private String id;
+
   @ManyToOne
   @JsonIgnore
   private User user;
+
   @Lob
   @Column(name="text", length=1000)
   private String text;
   private Integer songId;
-  @ManyToMany(mappedBy = "likedReviews",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-  Set<User> likes;
+
+  @ManyToMany(mappedBy="likedReviews", cascade=CascadeType.REMOVE, fetch=FetchType.EAGER)
+  private Set<User> likes;
 
   public Review() {
     this.id = UUID.randomUUID().toString();

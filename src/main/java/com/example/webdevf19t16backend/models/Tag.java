@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Tag {
   @Id
   private String id;
+
   @ManyToOne
   @JsonIgnore
   private User user;

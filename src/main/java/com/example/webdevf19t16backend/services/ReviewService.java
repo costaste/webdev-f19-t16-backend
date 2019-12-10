@@ -13,37 +13,35 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins="*",allowCredentials="true",allowedHeaders="*")
 public class ReviewService {
-
   @Autowired
-  ReviewRepository repository;
+  ReviewRepository reviewRepo;
   @Autowired
-  UserRepository uRepo;
+  UserRepository userRepo;
 
   @PostMapping("/api/users/{username}/reviews")
   List<Review> createReview(
     @PathVariable("username") String username,
-    @RequestBody Review newReview
-  ) {
-    User user = uRepo.findUser(username);
+    @RequestBody Review newReview) {
+    User user = userRepo.findUserFromUsername(username);
     newReview.setUser(user);
-    repository.save(newReview);
-    return repository.findAllReviews();
+    reviewRepo.save(newReview);
+    return reviewRepo.findAllReviews();
   }
 
   @GetMapping("/api/users/{username}/reviews")
   List<Review> findReviewsForUser(@PathVariable("username") String username) {
-    return repository.findReviewsForUser(username);
+    return reviewRepo.findReviewsForUser(username);
   }
 
   @GetMapping("/api/songs/{songId}/reviews")
   List<Review> findReviewsForSong(@PathVariable("songId") Integer songId) {
-    return repository.findReviewsForSong(songId);
+    return reviewRepo.findReviewsForSong(songId);
   }
 
   @DeleteMapping("/api/reviews/{reviewId}")
   List<Review> deleteReview(@PathVariable("reviewId") String reviewId) {
-    Review r = repository.findReview(reviewId);
-    repository.delete(r);
-    return repository.findAllReviews();
+    Review review = reviewRepo.findReviewFromId(reviewId);
+    reviewRepo.delete(review);
+    return reviewRepo.findAllReviews();
   }
 }

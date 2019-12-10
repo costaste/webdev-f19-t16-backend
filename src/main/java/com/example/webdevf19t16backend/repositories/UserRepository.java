@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface UserRepository extends CrudRepository<User, String> {
   @Query("SELECT user from User user WHERE user.username=:username")
-  public User findUser(@Param("username") String username);
+  User findUserFromUsername(@Param("username") String username);
 
   @Query("SELECT user from User user")
-  public List<User> findAllUsers();
+  List<User> findAllUsers();
 }

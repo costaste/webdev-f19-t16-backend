@@ -12,32 +12,34 @@ public class User {
   private String username;
   private String password;
   private String role;
+  private String photoUrl;
+
   @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Review> reviews;
+
   @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Review> tags;
+
   @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
   @JoinTable(
     name = "review_likes",
     joinColumns = {@JoinColumn(name = "user_username")},
     inverseJoinColumns = {@JoinColumn(name = "review_id")}
   )
-  Set<Review> likedReviews;
+  private Set<Review> likedReviews;
 
   public User() {
     this.username = UUID.randomUUID().toString();;
     this.password = "password";
     this.role = "reviewer";
+    this.photoUrl = "";
   }
 
-  public User(String username, String password, String role) {
-    if (username == null) {
-      this.username = UUID.randomUUID().toString();
-    } else {
-      this.username = username;
-    }
+  public User(String username, String password, String role, String photoUrl) {
+    this.username = username==null ? UUID.randomUUID().toString() : username;
     this.password = password;
     this.role = role;
+    this.photoUrl = photoUrl;
   }
 
   public String getUsername() {
@@ -67,5 +69,13 @@ public class User {
   public void addLike(Review r) {
     this.likedReviews.add(r);
     r.getLikes().add(this);
+  }
+
+  public String getPhotoUrl() {
+    return photoUrl;
+  }
+
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
   }
 }

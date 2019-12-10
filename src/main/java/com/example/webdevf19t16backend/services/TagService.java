@@ -15,28 +15,27 @@ import java.util.List;
 public class TagService {
 
   @Autowired
-  TagRepository repository;
+  TagRepository tagRepo;
   @Autowired
-  UserRepository uRepo;
+  UserRepository userRepo;
 
   @PostMapping("/api/users/{username}/tags")
   List<Tag> createTag(
     @PathVariable("username") String username,
-    @RequestBody Tag newTag
-  ) {
-    User user = uRepo.findUser(username);
+    @RequestBody Tag newTag) {
+    User user = userRepo.findUserFromUsername(username);
     newTag.setUser(user);
-    repository.save(newTag);
-    return repository.findAllTags();
+    tagRepo.save(newTag);
+    return tagRepo.findAllTags();
   }
 
   @GetMapping("/api/users/{username}/tags")
   List<Tag> findTagsForUser(@PathVariable("username") String username) {
-    return repository.findTagsForUser(username);
+    return tagRepo.findTagsForUser(username);
   }
 
   @GetMapping("/api/artists/{artistId}/tags")
   List<Tag> findTagsForArtist(@PathVariable("artistId") Integer artistId) {
-    return repository.findTagsForArtist(artistId);
+    return tagRepo.findTagsForArtist(artistId);
   }
 }

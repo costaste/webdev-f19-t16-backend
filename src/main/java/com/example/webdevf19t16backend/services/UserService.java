@@ -13,67 +13,76 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins="*",allowCredentials="true",allowedHeaders="*")
 public class UserService {
+  private final String userUrl = "/api/users";
 
   @Autowired
-  UserRepository repository;
+  UserRepository userRepo;
   @Autowired
-  ReviewRepository revRepo;
+  ReviewRepository reviewRepo;
 
-  // Creates a new User instance and add it to the existing collection of Users.
-  @PostMapping("/api/users")
-  User createUser(@RequestBody User newUser) {
-    repository.save(newUser);
-    return repository.findUser(newUser.getUsername());
+  @GetMapping(userUrl + "/{username}")
+  User getUser(
+          @PathVariable("username") String username,
+          @RequestBody String password) {
+    User user = userRepo.findUserFromUsername(username);
+
+    if(password.equals(user.getPassword())) {
+      return user;
+    } else {
+      return new User(user.getUsername(), "", user.getRole(), user.getPhotoUrl());
+    }
   }
 
-  // Method to let frontend know if a user with that username already exists (false = invalid, true = valid)
-  @PostMapping("/api/users/validate")
-  Boolean validateUser(@RequestBody User newUser) {
-    if (newUser.getUsername().equals("") || newUser.getPassword().equals("")) {
-      return false;
-    }
-    List<User> users = repository.findAllUsers();
-    for (User user : users) {
-        if (user.getUsername().equals(newUser.getUsername())) {
-            return false;
-        }
-    }
-    return true;
+  // Creates a new User instance and add it to the existing collection of Users.
+  @PostMapping(userUrl)
+  User createUser(@RequestBody User newUser) {
+    userRepo.save(newUser);
+    return userRepo.findUserFromUsername(newUser.getUsername());
+  }
+
+  // Method to let frontend know if a user with that username already exists
+  // (false = invalid, true = valid)
+  @PostMapping(userUrl + "/validate")
+  Boolean validateNewUser(@RequestBody User newUser) {
+    return !newUser.getUsername().equals("")
+            && !newUser.getPassword().equals("")
+            && userRepo.findUserFromUsername(newUser.getUsername())==null;
   }
 
   // Checks that user credentials exist
-  @PostMapping("/api/users/login")
+  @PostMapping(userUrl + "/login")
   User loginUser(@RequestBody User user) {
-    List<User> users = repository.findAllUsers();
-    for (User u : users) {
-        if (u.getUsername().equals(user.getUsername()) && u.getPassword().equals(user.getPassword())) {
-            return u;
-        }
-    }
-    return new User("", "", "");
+    User logInUser = userRepo.findUserFromUsername(user.getUsername());
+    return logInUser != null && logInUser.getPassword().equals(user.getPassword()) ?
+            logInUser :
+            new User("", "", "", "");
   }
 
-  @PutMapping("/api/users/{username}/reviews/{reviewId}")
+  // add review "like" from this user
+  @PutMapping(userUrl + "/{username}/reviews/{reviewId}")
   List<Review> likeReview(
-    @PathVariable("username") String username,
-    @PathVariable("reviewId") String reviewId
-  ) {
-    User user = repository.findUser(username);
-    Review review = revRepo.findReview(reviewId);
+          @PathVariable("username") String username,
+          @PathVariable("reviewId") String reviewId) {
+    User user = userRepo.findUserFromUsername(username);
+    Review review = reviewRepo.findReviewFromId(reviewId);
 
     user.addLike(review);
     review.addLike(user);
-    repository.save(user);
-    revRepo.save(review);
+    userRepo.save(user);
+    reviewRepo.save(review);
 
-    return revRepo.findAllReviews();
+    return reviewRepo.findAllReviews();
   }
 
-  @PutMapping("/api/users/{username}/reviews")
-  List<Review> editReview(@PathVariable("username") String username, @RequestBody Review editedReview){
-    Review r = revRepo.findReview(editedReview.getId());
-    r.setText(editedReview.getText());
-    revRepo.save(r);
-    return revRepo.findAllReviews();
+  // edit review by this user
+  @PutMapping(userUrl + "/{username}/reviews")
+  List<Review> editReview(
+          @PathVariable("username") String username,
+          @RequestBody Review editedReview) {
+    Review review = reviewRepo.findReviewFromId(editedReview.getId());
+    review.setText(editedReview.getText());
+    reviewRepo.save(review);
+
+    return reviewRepo.findAllReviews();
   }
 }

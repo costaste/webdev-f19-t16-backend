@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface TagRepository extends CrudRepository<Tag, String> {
   @Query("SELECT tag from Tag tag WHERE tag.id=:tid")
-  public Tag findTag(@Param("tid") String tid);
+  Tag findTagFromId(@Param("tid") String tid);
 
   @Query("SELECT tag from Tag tag")
-  public List<Tag> findAllTags();
+  List<Tag> findAllTags();
 
   @Query("SELECT tag from Tag tag WHERE tag.user.username=:username")
-  public List<Tag> findTagsForUser(@Param("username") String username);
+  List<Tag> findTagsForUser(@Param("username") String username);
 
   @Query("SELECT tag from Tag tag WHERE tag.artistId=:artistId")
-  public List<Tag> findTagsForArtist(@Param("artistId") Integer artistId);
+  List<Tag> findTagsForArtist(@Param("artistId") Integer artistId);
 }
