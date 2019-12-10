@@ -19,6 +19,11 @@ public class UserService {
   UserRepository userRepo;
   @Autowired
   ReviewRepository reviewRepo;
+  
+  @GetMapping(userUrl)
+  List<User> getAllUser() {
+    return userRepo.findAllUsers();
+  }
 
   @GetMapping(userUrl + "/{username}")
   User getUser(@PathVariable("username") String username) {
