@@ -27,10 +27,10 @@ public class ReviewService {
     reviewRepo.save(newReview);
     return reviewRepo.findAllReviews();
   }
-  
+
   @GetMapping("api/review/likemost")
   Review findMostLikedReview(){
-    List<Review> reviews = repository.findAllReviews();
+    List<Review> reviews = reviewRepo.findAllReviews();
     int max = 0;
     int index = -1;
     for(int i = 0; i < reviews.size(); i++){
@@ -41,10 +41,10 @@ public class ReviewService {
     }
     return reviews.get(index);
   }
-  
+
   @GetMapping("api/reviews")
   List<Review> findAllReview(){
-    return repository.findAllReviews();
+    return reviewRepo.findAllReviews();
   }
 
   @GetMapping("/api/users/{username}/reviews")
