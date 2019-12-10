@@ -28,6 +28,20 @@ public class ReviewService {
     return reviewRepo.findAllReviews();
   }
   
+  @GetMapping("api/review/likemost")
+  Review findMostLikedReview(){
+    List<Review> reviews = repository.findAllReviews();
+    int max = 0;
+    int index = -1;
+    for(int i = 0; i < reviews.size(); i++){
+      if(reviews.get(i).getLikes().size() > max) {
+        max = reviews.get(i).getLikes().size();
+        index = i;
+      }
+    }
+    return reviews.get(index);
+  }
+  
   @GetMapping("api/reviews")
   List<Review> findAllReview(){
     return repository.findAllReviews();
